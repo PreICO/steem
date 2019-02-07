@@ -116,6 +116,8 @@ int main( int argc, char** argv )
             FC_ASSERT( false, "Could not parse chain_id as hex string. Chain ID String: ${s}", ("s", chain_id_str) );
          }
       }
+#else
+      _steem_chain_id = chain_id_type(STEEM_CHAIN_ID);
 #endif
 
       fc::path data_dir;
