@@ -8,16 +8,9 @@ MESSAGE(STATUS "Configuring project fc located in: ${CMAKE_CURRENT_SOURCE_DIR}")
 SET( CMAKE_AUTOMOC OFF )
 
 # Setup module path to make visible used CMake extensions
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/GitVersionGen")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
 
-INCLUDE(GetPrerequisites)
-INCLUDE( VersionMacros )
 INCLUDE( SetupTargetMacros )
-INCLUDE(GetGitRevisionDescription)
-
-get_git_head_revision(GIT_REFSPEC FC_GIT_REVISION_SHA)
-get_git_unix_timestamp(FC_GIT_REVISION_UNIX_TIMESTAMP)
 
 SET( DEFAULT_HEADER_INSTALL_DIR include/\${target} )
 SET( DEFAULT_LIBRARY_INSTALL_DIR lib/ )
@@ -86,11 +79,6 @@ else ( MSVC )
      BUILD_BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/vendor/secp256k1-zkp/src/project_secp256k1-build/.libs/libsecp256k1.a
     )
     endif ( MINGW )
-    ExternalProject_Add_Step(project_secp256k1 autogen
-     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/vendor/secp256k1-zkp
-     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/vendor/secp256k1-zkp/autogen.sh
-     DEPENDERS configure
-    )
 
     ExternalProject_Get_Property(project_secp256k1 binary_dir)
 

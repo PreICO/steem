@@ -1,8 +1,3 @@
-list( APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/libraries/fc/GitVersionGen" )
-include( GetGitRevisionDescription )
-get_git_head_revision(GIT_REFSPEC STEEM_GIT_REVISION_SHA)
-get_git_unix_timestamp(STEEM_GIT_REVISION_UNIX_TIMESTAMP)
-git_describe(STEEM_GIT_REVISION_DESCRIPTION --tags)
 if(NOT STEEM_GIT_REVISION_DESCRIPTION)
     set(STEEM_GIT_REVISION_DESCRIPTION "unknown")
 endif(NOT STEEM_GIT_REVISION_DESCRIPTION)
