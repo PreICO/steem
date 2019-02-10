@@ -45,13 +45,13 @@
 
 #define STEEM_BLOCKCHAIN_VERSION              ( version(0, 21, 9) )
 
-#define STEEM_INIT_PUBLIC_KEY_STR             "STM8GC13uCZbP44HzMLV6zPZGwVQ8Nt4Kji8PapsPiNq1BK153XTX"
+#define STEEM_INIT_PUBLIC_KEY_STR             "ESH6LiN2meHCd6kw5ZeeNx8Q52eyimXkTPAFQwbrJwqYCDNTdM3sD"
 #define STEEM_INIT_OWNER_PUBLIC_KEY (steem::protocol::public_key_type(STEEM_INIT_OWNER_PUBLIC_KEY_STR))
 #define STEEM_INIT_ACTIVE_PUBLIC_KEY (steem::protocol::public_key_type(STEEM_INIT_ACTIVE_PUBLIC_KEY_STR))
 #define STEEM_INIT_POSTING_PUBLIC_KEY (steem::protocol::public_key_type(STEEM_INIT_POSTING_PUBLIC_KEY_STR))
 #define STEEM_INIT_MEMO_PUBLIC_KEY (steem::protocol::public_key_type(STEEM_INIT_MEMO_PUBLIC_KEY_STR))
-#define STEEM_CHAIN_ID fc::sha256()
-#define STEEM_ADDRESS_PREFIX                  "STM"
+#define STEEM_CHAIN_ID (fc::sha256::hash("earthshare"))
+#define STEEM_ADDRESS_PREFIX                  "ESH"
 
 #define STEEM_GENESIS_TIME                    (fc::time_point_sec(1458835200))
 #define STEEM_MINING_TIME                     (fc::time_point_sec(1458838800))
@@ -73,7 +73,7 @@
 #define STEEM_OWNER_AUTH_HISTORY_TRACKING_START_BLOCK_NUM 3186477
 #define STEEM_OWNER_AUTH_HISTORY_TRACKING_START_BLOCK_NUM_HF21 1
 
-#define STEEM_INIT_SUPPLY                     int64_t(0)
+#define STEEM_INIT_SUPPLY                     int64_t(300001000000ll)
 
 #endif
 
@@ -89,9 +89,9 @@
 #define STEEM_START_VESTING_BLOCK             (STEEM_BLOCKS_PER_DAY * 7)
 #define STEEM_START_MINER_VOTING_BLOCK        (STEEM_BLOCKS_PER_DAY * 30)
 
-#define STEEM_INIT_MINER_NAME                 "initminer"
-#define STEEM_SYSTEM_NAME                     "initminer"
-#define STEEM_NUM_INIT_MINERS                 1
+#define STEEM_INIT_MINER_NAME                 "preico"
+#define STEEM_SYSTEM_NAME                     "earthnation"
+#define STEEM_NUM_INIT_MINERS                 21
 #define STEEM_INIT_TIME                       (fc::time_point_sec());
 
 #define STEEM_MAX_WITNESSES                   21
