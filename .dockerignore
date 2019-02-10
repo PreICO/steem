@@ -1,0 +1,14 @@
+/build
+/ciscripts
+/contrib
+/doc
+/example_plugins
+/install
+/.dockerignore
+/CONTRIBUTING.md
+/Dockerfile
+/Jenkinsfile
+/LICENSE.md
+/README.md
+/circle.yml
+/deploy.sh
