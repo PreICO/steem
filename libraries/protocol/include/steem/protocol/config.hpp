@@ -46,6 +46,10 @@
 #define STEEM_BLOCKCHAIN_VERSION              ( version(0, 21, 9) )
 
 #define STEEM_INIT_PUBLIC_KEY_STR             "ESH6LiN2meHCd6kw5ZeeNx8Q52eyimXkTPAFQwbrJwqYCDNTdM3sD"
+#define STEEM_INIT_OWNER_PUBLIC_KEY_STR             "ESH6ZDZFoqEKunwX3zhmmeGyooKpHBy3meCrQaYmK2dZMG4gtSFoz"
+#define STEEM_INIT_ACTIVE_PUBLIC_KEY_STR             "ESH66yqmbWi6F4SBW4mZJj4LTCSCTCcaRtzzxQ2oYiWGttYvPATVo"
+#define STEEM_INIT_POSTING_PUBLIC_KEY_STR             "ESH5DYuycsuTLRjk7AU5hupuJoinuU4K67tXHN7y26DoBic3W1isD"
+#define STEEM_INIT_MEMO_PUBLIC_KEY_STR             "ESH6uLkHDhNz9ey9bgS2dDqWFJ8evhw1RY9tw96BDPTW8TWaXpxqN"
 #define STEEM_INIT_OWNER_PUBLIC_KEY (steem::protocol::public_key_type(STEEM_INIT_OWNER_PUBLIC_KEY_STR))
 #define STEEM_INIT_ACTIVE_PUBLIC_KEY (steem::protocol::public_key_type(STEEM_INIT_ACTIVE_PUBLIC_KEY_STR))
 #define STEEM_INIT_POSTING_PUBLIC_KEY (steem::protocol::public_key_type(STEEM_INIT_POSTING_PUBLIC_KEY_STR))
