@@ -57,8 +57,8 @@
 #define STEEM_CHAIN_ID (fc::sha256::hash("earthshare"))
 #define STEEM_ADDRESS_PREFIX                  "ESH"
 
-#define STEEM_GENESIS_TIME                    (fc::time_point_sec(1458835200))
-#define STEEM_MINING_TIME                     (fc::time_point_sec(1458838800))
+#define STEEM_GENESIS_TIME                    (fc::time_point_sec(1550266384))
+#define STEEM_MINING_TIME                     (fc::time_point_sec(1550266384))
 #define STEEM_CASHOUT_WINDOW_SECONDS_PRE_HF12 (60*60*24)    /// 1 day
 #define STEEM_CASHOUT_WINDOW_SECONDS_PRE_HF17 (60*60*12)    /// 12 hours
 #define STEEM_CASHOUT_WINDOW_SECONDS          (60*60*24*7)  /// 7 days
