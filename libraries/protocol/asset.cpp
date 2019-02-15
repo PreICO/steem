@@ -374,8 +374,6 @@ DEFINE_PRICE_COMPARISON_OPERATOR( >= )
 
       void price::validate() const
       { try {
-         FC_ASSERT( base.amount > share_type(0) );
-         FC_ASSERT( quote.amount > share_type(0) );
          FC_ASSERT( base.symbol != quote.symbol );
       } FC_CAPTURE_AND_RETHROW( (base)(quote) ) }
 
