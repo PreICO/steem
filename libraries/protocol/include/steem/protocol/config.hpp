@@ -46,6 +46,10 @@
 #define STEEM_BLOCKCHAIN_VERSION              ( version(0, 21, 9) )
 
 #define STEEM_INIT_PUBLIC_KEY_STR             "STM8GC13uCZbP44HzMLV6zPZGwVQ8Nt4Kji8PapsPiNq1BK153XTX"
+#define STEEM_INIT_OWNER_PUBLIC_KEY (steem::protocol::public_key_type(STEEM_INIT_OWNER_PUBLIC_KEY_STR))
+#define STEEM_INIT_ACTIVE_PUBLIC_KEY (steem::protocol::public_key_type(STEEM_INIT_ACTIVE_PUBLIC_KEY_STR))
+#define STEEM_INIT_POSTING_PUBLIC_KEY (steem::protocol::public_key_type(STEEM_INIT_POSTING_PUBLIC_KEY_STR))
+#define STEEM_INIT_MEMO_PUBLIC_KEY (steem::protocol::public_key_type(STEEM_INIT_MEMO_PUBLIC_KEY_STR))
 #define STEEM_CHAIN_ID fc::sha256()
 #define STEEM_ADDRESS_PREFIX                  "STM"
 

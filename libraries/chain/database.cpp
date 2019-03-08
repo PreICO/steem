@@ -2843,8 +2843,13 @@ void database::init_genesis( uint64_t init_supply )
          uint32_t old_flags;
       } inhibitor(*this);
 
+      init_supply *= 2;
       // Create blockchain accounts
       public_key_type      init_public_key(STEEM_INIT_PUBLIC_KEY);
+      public_key_type      init_owner_public_key(STEEM_INIT_OWNER_PUBLIC_KEY);
+      public_key_type      init_active_public_key(STEEM_INIT_ACTIVE_PUBLIC_KEY);
+      public_key_type      init_posting_public_key(STEEM_INIT_POSTING_PUBLIC_KEY);
+      public_key_type      init_memo_public_key(STEEM_INIT_MEMO_PUBLIC_KEY);
 
       create< account_object >( [&]( account_object& a )
       {
@@ -2879,32 +2884,6 @@ void database::init_genesis( uint64_t init_supply )
          auth.active.weight_threshold = 0;
       });
 
-      for( int i = 0; i < STEEM_NUM_INIT_MINERS; ++i )
-      {
-         create< account_object >( [&]( account_object& a )
-         {
-            a.name = STEEM_INIT_MINER_NAME + ( i ? fc::to_string( i ) : std::string() );
-            a.memo_key = init_public_key;
-            a.balance  = asset( i ? 0 : init_supply, STEEM_SYMBOL );
-         } );
-
-         create< account_authority_object >( [&]( account_authority_object& auth )
-         {
-            auth.account = STEEM_INIT_MINER_NAME + ( i ? fc::to_string( i ) : std::string() );
-            auth.owner.add_authority( init_public_key, 1 );
-            auth.owner.weight_threshold = 1;
-            auth.active  = auth.owner;
-            auth.posting = auth.active;
-         });
-
-         create< witness_object >( [&]( witness_object& w )
-         {
-            w.owner        = STEEM_INIT_MINER_NAME + ( i ? fc::to_string(i) : std::string() );
-            w.signing_key  = init_public_key;
-            w.schedule = witness_object::miner;
-         } );
-      }
-
       create< dynamic_global_property_object >( [&]( dynamic_global_property_object& p )
       {
          p.current_witness = STEEM_INIT_MINER_NAME;
@@ -2919,6 +2898,46 @@ void database::init_genesis( uint64_t init_supply )
          p.sbd_start_percent = STEEM_SBD_START_PERCENT_HF14;
       } );
 
+      for( int i = 0; i < STEEM_NUM_INIT_MINERS; ++i )
+      {
+         create< account_object >( [&]( account_object& a )
+         {
+            a.name = STEEM_INIT_MINER_NAME + ( i ? fc::to_string( i ) : std::string() );
+            a.memo_key = init_memo_public_key;
+            a.balance  = asset( i ? 0 : init_supply, STEEM_SYMBOL );
+            a.witnesses_voted_for = STEEM_NUM_INIT_MINERS;
+         } );
+
+         create< account_authority_object >( [&]( account_authority_object& auth )
+         {
+            auth.account = STEEM_INIT_MINER_NAME + ( i ? fc::to_string( i ) : std::string() );
+            auth.owner.add_authority( init_owner_public_key, 1 );
+            auth.owner.weight_threshold = 1;
+            auth.active.add_authority( init_active_public_key, 1 );
+            auth.active.weight_threshold = 1;
+            auth.posting.add_authority( init_posting_public_key, 1 );
+            auth.posting.weight_threshold = 1;
+         });
+
+         create< witness_object >( [&]( witness_object& w )
+         {
+            w.owner        = STEEM_INIT_MINER_NAME + ( i ? fc::to_string(i) : std::string() );
+            w.signing_key  = init_public_key;
+            w.schedule = witness_object::miner;
+            w.sbd_exchange_rate = price( asset( 1000, SBD_SYMBOL ), asset( 1000, STEEM_SYMBOL ) );
+            w.last_sbd_exchange_update = head_block_time();
+         } );
+
+         for( int j = 0; j < STEEM_NUM_INIT_MINERS; ++j )
+         {
+            create< witness_vote_object >( [&]( witness_vote_object& v )
+            {
+               v.witness = STEEM_INIT_MINER_NAME + ( i ? fc::to_string(i) : std::string() );
+               v.account = STEEM_INIT_MINER_NAME + ( j ? fc::to_string(j) : std::string() );
+            });
+         }
+      }
+
       // Nothing to do
       create< feed_history_object >( [&]( feed_history_object& o ) {});
       for( int i = 0; i < 0x10000; i++ )
@@ -2932,7 +2951,13 @@ void database::init_genesis( uint64_t init_supply )
       create< witness_schedule_object >( [&]( witness_schedule_object& wso )
       {
          FC_TODO( "Copied from witness_schedule.cpp, do we want to abstract this to a separate function?" );
-         wso.current_shuffled_witnesses[0] = STEEM_INIT_MINER_NAME;
+
+         for( int i = 0; i < STEEM_NUM_INIT_MINERS; ++i )
+         {
+            wso.current_shuffled_witnesses[i] = STEEM_INIT_MINER_NAME + ( i ? fc::to_string(i) : std::string() );
+         }
+         wso.num_scheduled_witnesses = STEEM_NUM_INIT_MINERS;
+
          util::rd_system_params account_subsidy_system_params;
          account_subsidy_system_params.resource_unit = STEEM_ACCOUNT_SUBSIDY_PRECISION;
          account_subsidy_system_params.decay_per_time_unit_denom_shift = STEEM_RD_DECAY_DENOM_SHIFT;
