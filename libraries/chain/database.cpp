@@ -4664,10 +4664,13 @@ void database::init_hardforks()
    FC_ASSERT( STEEM_HARDFORK_0_20 == 20, "Invalid hardfork configuration" );
    _hardfork_times[ STEEM_HARDFORK_0_20 ] = fc::time_point_sec( STEEM_HARDFORK_0_20_TIME );
    _hardfork_versions[ STEEM_HARDFORK_0_20 ] = STEEM_HARDFORK_0_20_VERSION;
-#ifdef IS_TEST_NET
    FC_ASSERT( STEEM_HARDFORK_0_21 == 21, "Invalid hardfork configuration" );
    _hardfork_times[ STEEM_HARDFORK_0_21 ] = fc::time_point_sec( STEEM_HARDFORK_0_21_TIME );
    _hardfork_versions[ STEEM_HARDFORK_0_21 ] = STEEM_HARDFORK_0_21_VERSION;
+#ifdef IS_TEST_NET
+   FC_ASSERT( STEEM_HARDFORK_0_22 == 22, "Invalid hardfork configuration" );
+   _hardfork_times[ STEEM_HARDFORK_0_22 ] = fc::time_point_sec( STEEM_HARDFORK_0_22_TIME );
+   _hardfork_versions[ STEEM_HARDFORK_0_22 ] = STEEM_HARDFORK_0_22_VERSION;
 #endif
 
 
@@ -5019,8 +5022,10 @@ void database::apply_hardfork( uint32_t hardfork )
             });
          }
          break;
-   #ifdef IS_TEST_NET
       case STEEM_HARDFORK_0_21:
+         break;
+   #ifdef IS_TEST_NET
+      case STEEM_HARDFORK_0_22:
          break;
 #endif
       default:
