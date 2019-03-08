@@ -1104,7 +1104,7 @@ void withdraw_vesting_evaluator::do_apply( const withdraw_vesting_operation& o )
    {
       // TODO: Update this to a HF 20 check
 #ifndef IS_TEST_NET
-      if( _db.head_block_num() > 23847548 )
+      if( _db.head_block_num() > 23847548 || _db.has_hardfork( STEEM_HARDFORK_0_21 ) )
       {
 #endif
          FC_ASSERT( false, "Cannot withdraw negative VESTS. account: ${account}, vests:${vests}",
