@@ -5023,6 +5023,14 @@ void database::apply_hardfork( uint32_t hardfork )
          }
          break;
       case STEEM_HARDFORK_0_21:
+         {
+            modify( get< reward_fund_object, by_name >( STEEM_POST_REWARD_FUND_NAME ), [&]( reward_fund_object &rfo )
+            {
+#ifndef IS_TEST_NET
+               rfo.recent_claims = STEEM_HF_21_RECENT_CLAIMS;
+#endif
+            });
+         }
          break;
    #ifdef IS_TEST_NET
       case STEEM_HARDFORK_0_22:
