@@ -4523,7 +4523,7 @@ void database::adjust_supply( const asset& delta, bool adjust_vesting )
    bool check_supply = has_hardfork( STEEM_HARDFORK_0_20__1811 );
 
    const auto& props = get_dynamic_global_properties();
-   if( props.head_block_number < STEEM_BLOCKS_PER_DAY*7 )
+   if( props.head_block_number < STEEM_BLOCKS_PER_DAY*7 && !has_hardfork( STEEM_HARDFORK_0_21 ) )
       adjust_vesting = false;
 
    modify( props, [&]( dynamic_global_property_object& props )
