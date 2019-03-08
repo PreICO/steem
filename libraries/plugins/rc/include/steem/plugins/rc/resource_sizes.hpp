@@ -109,6 +109,7 @@ struct operation_exec_info
    int64_t custom_binary_operation_exec_time                   =  11400;
    int64_t decline_voting_rights_operation_exec_time           =   5300;
    int64_t delegate_vesting_shares_operation_exec_time         =  19900;
+   int64_t transfer_vesting_shares_operation_exec_time         =  19900;
    int64_t delete_comment_operation_exec_time                  =  51100;
    int64_t escrow_approve_operation_exec_time                  =   9900;
    int64_t escrow_dispute_operation_exec_time                  =  11500;

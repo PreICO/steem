@@ -86,6 +86,7 @@
 #define STEEM_START_MINER_VOTING_BLOCK        (STEEM_BLOCKS_PER_DAY * 30)
 
 #define STEEM_INIT_MINER_NAME                 "initminer"
+#define STEEM_SYSTEM_NAME                     "initminer"
 #define STEEM_NUM_INIT_MINERS                 1
 #define STEEM_INIT_TIME                       (fc::time_point_sec());
 
@@ -107,7 +108,7 @@
 #define STEEM_VESTING_WITHDRAW_INTERVALS      13
 #define STEEM_VESTING_WITHDRAW_INTERVAL_SECONDS (60*60*24*7) /// 1 week per interval
 #define STEEM_MAX_WITHDRAW_ROUTES             10
-#define STEEM_SAVINGS_WITHDRAW_TIME        	(fc::days(3))
+#define STEEM_SAVINGS_WITHDRAW_TIME            (fc::days(3))
 #define STEEM_SAVINGS_WITHDRAW_REQUEST_LIMIT  100
 #define STEEM_VOTING_MANA_REGENERATION_SECONDS (5*60*60*24) // 5 day
 #define STEEM_MAX_VOTE_CHANGES                5
@@ -324,4 +325,3 @@
 #define SMT_UPVOTE_LOCKOUT                      (60*60*12)  /// 12 hours
 
 #endif /// STEEM_ENABLE_SMT
-

@@ -3027,4 +3027,93 @@ void delegate_vesting_shares_evaluator::do_apply( const delegate_vesting_shares_
    }
 }
 
+void transfer_vesting_shares_evaluator::do_apply( const transfer_vesting_shares_operation& op )
+{
+#pragma message( "TODO: Update get_effective_vesting_shares when modifying this operation to support SMTs." )
+
+   const auto& from = _db.get_account( op.from );
+   const auto& to = _db.get_account( op.to );
+   asset available_shares;
+
+   if( _db.has_hardfork( STEEM_HARDFORK_0_20__2539 ) )
+   {
+      auto max_mana = util::get_effective_vesting_shares( from );
+
+      _db.modify( from, [&]( account_object& a )
+      {
+         util::manabar_params params( max_mana, STEEM_VOTING_MANA_REGENERATION_SECONDS );
+         a.voting_manabar.regenerate_mana( params, _db.head_block_time() );
+      });
+
+      available_shares = asset( from.voting_manabar.current_mana, VESTS_SYMBOL );
+
+      // Assume delegated VESTS are used first when consuming mana. You cannot transfer received vesting shares
+      available_shares.amount = std::min( available_shares.amount, max_mana - from.received_vesting_shares.amount );
+
+      if( from.next_vesting_withdrawal < fc::time_point_sec::maximum()
+         && from.to_withdraw - from.withdrawn > from.vesting_withdraw_rate.amount )
+      {
+         /*
+         current voting mana does not include the current week's power down:
+
+         std::min(
+            account.vesting_withdraw_rate.amount.value,           // Weekly amount
+            account.to_withdraw.value - account.withdrawn.value   // Or remainder
+            );
+
+         But an account cannot transfer **any** VESTS that they are powering down.
+         The remaining withdrawal needs to be added in but then the current week is double counted.
+         */
+
+         auto weekly_withdraw = asset( std::min(
+            from.vesting_withdraw_rate.amount.value,           // Weekly amount
+            from.to_withdraw.value - from.withdrawn.value   // Or remainder
+            ), VESTS_SYMBOL );
+
+         available_shares += weekly_withdraw - asset( from.to_withdraw - from.withdrawn, VESTS_SYMBOL );
+      }
+   }
+   else
+   {
+      available_shares = from.vesting_shares - from.delegated_vesting_shares - asset( from.to_withdraw - from.withdrawn, VESTS_SYMBOL );
+   }
+
+   const auto& wso = _db.get_witness_schedule_object();
+   const auto& gpo = _db.get_dynamic_global_properties();
+
+   // HF 20 increase fee meaning by 30x, reduce these thresholds to compensate.
+   auto min_transfer = _db.has_hardfork( STEEM_HARDFORK_0_20__1761 ) ?
+      asset( wso.median_props.account_creation_fee.amount / 3, STEEM_SYMBOL ) * gpo.get_vesting_share_price() :
+      asset( wso.median_props.account_creation_fee.amount * 10, STEEM_SYMBOL ) * gpo.get_vesting_share_price();
+
+   FC_ASSERT( available_shares >= op.vesting_shares, "Account ${acc} does not have enough mana to transfer. required: ${r} available: ${a}",
+      ("acc", op.from)("r", op.vesting_shares)("a", available_shares) );
+   FC_ASSERT( op.vesting_shares >= min_transfer, "Account must transfer a minimum of ${v}", ("v", min_transfer) );
+
+   _db.modify( from, [&]( account_object& a )
+   {
+      if( _db.has_hardfork( STEEM_HARDFORK_0_20__2539 ) )
+      {
+         a.voting_manabar.use_mana( op.vesting_shares.amount.value );
+      }
+
+      a.vesting_shares -= op.vesting_shares;
+   });
+
+   _db.modify( to, [&]( account_object& a )
+   {
+      if( _db.has_hardfork( STEEM_HARDFORK_0_20__2539 ) )
+      {
+         util::manabar_params params( util::get_effective_vesting_shares( a ), STEEM_VOTING_MANA_REGENERATION_SECONDS );
+         a.voting_manabar.regenerate_mana( params, _db.head_block_time() );
+         a.voting_manabar.use_mana( -op.vesting_shares.amount.value );
+      }
+
+      a.vesting_shares += op.vesting_shares;
+   });
+
+   _db.adjust_proxied_witness_votes(from, -op.vesting_shares.amount);
+   _db.adjust_proxied_witness_votes(to, op.vesting_shares.amount);
+}
+
 } } // steem::chain

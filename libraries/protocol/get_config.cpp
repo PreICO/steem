@@ -82,6 +82,7 @@ fc::variant_object get_config()
    // we need this line present but inactivated so CI check for all constants in config.hpp doesn't complain.
    result["STEEM_INIT_PRIVATE_KEY"] = STEEM_INIT_PRIVATE_KEY;
 #endif
+   result["STEEM_SYSTEM_NAME"] = STEEM_SYSTEM_NAME;
    result["STEEM_INIT_SUPPLY"] = STEEM_INIT_SUPPLY;
    result["STEEM_INIT_TIME"] = STEEM_INIT_TIME;
    result["STEEM_IRREVERSIBLE_THRESHOLD"] = STEEM_IRREVERSIBLE_THRESHOLD;

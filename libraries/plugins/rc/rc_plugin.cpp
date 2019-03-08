@@ -1,4 +1,3 @@
-
 #include <steem/plugins/block_data_export/block_data_export_plugin.hpp>
 
 #include <steem/plugins/rc/rc_curve.hpp>
@@ -621,6 +620,12 @@ struct pre_apply_operation_visitor
       regenerate( op.delegatee );
    }
 
+   void operator()( const transfer_vesting_shares_operation& op )const
+   {
+      regenerate( op.from );
+      regenerate( op.to );
+   }
+
    void operator()( const author_reward_operation& op )const
    {
       regenerate( op.author );
@@ -778,6 +783,12 @@ struct post_apply_operation_visitor
    {
       _mod_accounts.emplace_back( op.delegator );
       _mod_accounts.emplace_back( op.delegatee );
+   }
+
+   void operator()( const transfer_vesting_shares_operation& op )const
+   {
+      _mod_accounts.emplace_back( op.from );
+      _mod_accounts.emplace_back( op.to );
    }
 
    void operator()( const author_reward_operation& op )const

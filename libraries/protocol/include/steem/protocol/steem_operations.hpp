@@ -1052,6 +1052,16 @@ namespace steem { namespace protocol {
       void get_required_active_authorities( flat_set< account_name_type >& a ) const { a.insert( delegator ); }
       void validate() const;
    };
+
+   struct transfer_vesting_shares_operation : public base_operation
+   {
+      account_name_type from;        ///< The account transfering vesting shares
+      account_name_type to;          ///< The account receiving vesting shares
+      asset             vesting_shares;   ///< The amount of vesting shares transfered
+
+      void get_required_active_authorities( flat_set< account_name_type >& a ) const { a.insert( from ); }
+      void validate() const;
+   };
 } } // steem::protocol
 
 
@@ -1155,3 +1165,4 @@ FC_REFLECT( steem::protocol::claim_reward_balance_operation, (account)(reward_st
 FC_REFLECT( steem::protocol::claim_reward_balance2_operation, (account)(extensions)(reward_tokens) )
 #endif
 FC_REFLECT( steem::protocol::delegate_vesting_shares_operation, (delegator)(delegatee)(vesting_shares) );
+FC_REFLECT( steem::protocol::transfer_vesting_shares_operation, (from)(to)(vesting_shares) );

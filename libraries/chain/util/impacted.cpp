@@ -174,6 +174,12 @@ struct get_impacted_account_visitor
       _impacted.insert( op.delegatee );
    }
 
+  void operator()( const transfer_vesting_shares_operation& op )
+  {
+      _impacted.insert( op.from );
+      _impacted.insert( op.to );
+  }
+
    void operator()( const witness_set_properties_operation& op )
    {
       _impacted.insert( op.owner );

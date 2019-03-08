@@ -1,4 +1,3 @@
-
 #include <steem/plugins/rc/resource_count.hpp>
 #include <steem/plugins/rc/resource_sizes.hpp>
 
@@ -112,6 +111,11 @@ struct count_operation_visitor
          _w.vesting_delegation_expiration_object_base_size
          );
       execution_time_count += _e.delegate_vesting_shares_operation_exec_time;
+   }
+
+   void operator()( const transfer_vesting_shares_operation& op )const
+   {
+      execution_time_count += _e.transfer_vesting_shares_operation_exec_time;
    }
 
    void operator()( const escrow_transfer_operation& op )const

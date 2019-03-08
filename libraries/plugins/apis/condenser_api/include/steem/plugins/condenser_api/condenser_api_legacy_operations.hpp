@@ -662,6 +662,29 @@ namespace steem { namespace plugins { namespace condenser_api {
       legacy_asset      vesting_shares;
    };
 
+   struct legacy_transfer_vesting_shares_operation
+   {
+      legacy_transfer_vesting_shares_operation() {}
+      legacy_transfer_vesting_shares_operation( const transfer_vesting_shares_operation& op ) :
+         from( op.from ),
+         to( op.to ),
+         vesting_shares( legacy_asset::from_asset( op.vesting_shares ) )
+      {}
+
+      operator transfer_vesting_shares_operation()const
+      {
+         transfer_vesting_shares_operation op;
+         op.from = from;
+         op.to = to;
+         op.vesting_shares = vesting_shares;
+         return op;
+      }
+
+      account_name_type from;
+      account_name_type to;
+      legacy_asset      vesting_shares;
+   };
+
    struct legacy_author_reward_operation
    {
       legacy_author_reward_operation() {}
@@ -1047,7 +1070,8 @@ namespace steem { namespace plugins { namespace condenser_api {
             legacy_comment_payout_update_operation,
             legacy_return_vesting_delegation_operation,
             legacy_comment_benefactor_reward_operation,
-            legacy_producer_reward_operation
+            legacy_producer_reward_operation,
+            legacy_transfer_vesting_shares_operation
          > legacy_operation;
 
    struct legacy_operation_conversion_visitor
@@ -1185,6 +1209,12 @@ namespace steem { namespace plugins { namespace condenser_api {
       bool operator()( const delegate_vesting_shares_operation& op )const
       {
          l_op = legacy_delegate_vesting_shares_operation( op );
+         return true;
+      }
+
+      bool operator()( const transfer_vesting_shares_operation& op )const
+      {
+         l_op = legacy_transfer_vesting_shares_operation( op );
          return true;
       }
 
@@ -1369,6 +1399,11 @@ struct convert_from_legacy_operation_visitor
       return operation( delegate_vesting_shares_operation( op ) );
    }
 
+   operation operator()( const legacy_transfer_vesting_shares_operation& op )const
+   {
+      return operation( transfer_vesting_shares_operation( op ) );
+   }
+
    operation operator()( const legacy_account_create_with_delegation_operation& op )const
    {
       return operation( account_create_with_delegation_operation( op ) );
@@ -1548,6 +1583,7 @@ FC_REFLECT( steem::plugins::condenser_api::legacy_escrow_release_operation, (fro
 FC_REFLECT( steem::plugins::condenser_api::legacy_pow2_operation, (work)(new_owner_key)(props) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_claim_reward_balance_operation, (account)(reward_steem)(reward_sbd)(reward_vests) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_delegate_vesting_shares_operation, (delegator)(delegatee)(vesting_shares) );
+FC_REFLECT( steem::plugins::condenser_api::legacy_transfer_vesting_shares_operation, (from)(to)(vesting_shares) );
 FC_REFLECT( steem::plugins::condenser_api::legacy_author_reward_operation, (author)(permlink)(sbd_payout)(steem_payout)(vesting_payout) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_curation_reward_operation, (curator)(reward)(comment_author)(comment_permlink) )
 FC_REFLECT( steem::plugins::condenser_api::legacy_comment_reward_operation, (author)(permlink)(payout) )

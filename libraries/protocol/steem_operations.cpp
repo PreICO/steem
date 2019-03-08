@@ -699,4 +699,15 @@ namespace steem { namespace protocol {
       FC_ASSERT( vesting_shares >= asset( 0, VESTS_SYMBOL ), "Delegation cannot be negative" );
    }
 
+   void transfer_vesting_shares_operation::validate()const
+   {
+      validate_account_name( from );
+      validate_account_name( to );
+      FC_ASSERT( from == STEEM_INIT_MINER_NAME || from == STEEM_SYSTEM_NAME,
+                 "You cannot transfer VESTS" );
+      FC_ASSERT( from != to, "You cannot transfer VESTS to yourself" );
+      FC_ASSERT( to != STEEM_INIT_MINER_NAME, "You cannot transfer VESTS back" );
+      FC_ASSERT( is_asset_type( vesting_shares, VESTS_SYMBOL ), "Transfer must be VESTS" );
+      FC_ASSERT( vesting_shares >= asset( 0, VESTS_SYMBOL ), "Transfer cannot be negative" );
+    }
 } } // steem::protocol

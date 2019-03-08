@@ -63,5 +63,6 @@ STEEM_DEFINE_EVALUATOR( smt_set_setup_parameters )
 STEEM_DEFINE_EVALUATOR( smt_set_runtime_parameters )
 STEEM_DEFINE_EVALUATOR( smt_create )
 #endif
+STEEM_DEFINE_EVALUATOR( transfer_vesting_shares )
 
 } } // steem::chain
