@@ -20,6 +20,7 @@
 
 #ifndef IS_TEST_NET
 #define STEEM_HF20_BLOCK_NUM                              26256743
+#define STEEM_HF21_BLOCK_NUM                              1
 #endif
 
 // 1.66% is ~2 hours of regen.
@@ -327,8 +328,13 @@ void rc_plugin_impl::on_post_apply_block( const block_notification& note )
    const dynamic_global_property_object& gpo = _db.get_dynamic_global_properties();
    if( before_first_block() )
    {
-      if( gpo.head_block_number == _enable_at_block )
+      if( ( _db.has_hardfork( STEEM_HARDFORK_0_20 )
+            && gpo.head_block_number >= STEEM_HF20_BLOCK_NUM )
+          || ( _db.has_hardfork( STEEM_HARDFORK_0_21 )
+               && gpo.head_block_number >= STEEM_HF21_BLOCK_NUM ) )
+      {
          on_first_block();
+      }
       else
          return;
    }
@@ -987,13 +993,6 @@ void rc_plugin::plugin_initialize( const boost::program_options::variables_map& 
       add_plugin_index< rc_account_index >(db);
 
       my->_skip.skip_reject_not_enough_rc = options.at( "rc-skip-reject-not-enough-rc" ).as< bool >();
-#ifndef IS_TEST_NET
-      if( !options.at( "rc-compute-historical-rc" ).as<bool>() )
-      {
-         my->_enable_at_block = STEEM_HF20_BLOCK_NUM;
-      }
-#endif
-      ilog( "RC's will be computed starting at block ${b}", ("b", my->_enable_at_block) );
    }
    FC_CAPTURE_AND_RETHROW()
 }
