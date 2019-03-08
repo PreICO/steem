@@ -1640,7 +1640,9 @@ void database::adjust_rshares2( const comment_object& c, fc::uint128_t old_rshar
 
 void database::update_owner_authority( const account_object& account, const authority& owner_authority )
 {
-   if( head_block_num() >= STEEM_OWNER_AUTH_HISTORY_TRACKING_START_BLOCK_NUM )
+   if( ( head_block_num() >= STEEM_OWNER_AUTH_HISTORY_TRACKING_START_BLOCK_NUM
+         || has_hardfork( STEEM_HARDFORK_0_21 ) )
+       && head_block_num() >= STEEM_OWNER_AUTH_HISTORY_TRACKING_START_BLOCK_NUM_HF21 )
    {
       create< owner_authority_history_object >( [&]( owner_authority_history_object& hist )
       {
