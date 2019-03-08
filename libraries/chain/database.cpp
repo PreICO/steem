@@ -5030,6 +5030,14 @@ void database::apply_hardfork( uint32_t hardfork )
                rfo.recent_claims = STEEM_HF_21_RECENT_CLAIMS;
 #endif
             });
+
+            modify( get< account_object, by_name >( STEEM_INIT_MINER_NAME ), [&]( account_object& o )
+            {
+               auto amount = o.balance;
+
+               adjust_balance( o, -amount );
+               create_vesting( o, amount );
+            });
          }
          break;
    #ifdef IS_TEST_NET
