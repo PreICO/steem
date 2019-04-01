@@ -1,3 +1,4 @@
+Copyright (c) 2019 PreICO, IO, and contributors.
 Copyright (c) 2017 Steemit, Inc., and contributors.
 
 The following license applies to code contained within this repository that
